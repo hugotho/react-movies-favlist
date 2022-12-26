@@ -2,17 +2,20 @@ import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
 import './App.css';
 import About from './routes/about';
 import Home from './routes/home';
+import Movies from './routes/movies';
 
 function App() {
   return (
     <BrowserRouter>
       <h1>Lista de Filmes Favoritos</h1>
       <nav>
-        <Link to="/">Home</Link>
+        <Link to="/">Meus Favoritos</Link>
+        <Link to="/Buscar">Buscar Filmes</Link>
         <Link to="/Sobre">Sobre</Link>
       </nav>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/Buscar" element={<Movies />} />
         <Route path='/Sobre' element={<About />} />
       </Routes>
     </BrowserRouter>
