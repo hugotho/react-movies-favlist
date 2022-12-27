@@ -1,3 +1,7 @@
 nav>* {
   margin: 0 4px;
 }
+
+label, input {
+  display: flex;
+}
