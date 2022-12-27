@@ -1,13 +1,15 @@
 import { useContext, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
 
-export default function Login(props) {
+export default function Register(props) {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [token, setToken] = useContext(AuthContext);
-  const navigateTo = useNavigate()
+  const [token] = useContext(AuthContext);
+  const navigateTo = useNavigate();
 
+  
   const apiBaseUrl = props.api;
 
   // Usuário já logado => Redireciona para Home
@@ -19,9 +21,14 @@ export default function Login(props) {
 
   return (
     <div>
-      <h2>Login</h2>
+      <h2>Cadastrar</h2>
 
       <form>
+      <label htmlFor="name">Nome:</label>
+        <input id="name" type="text" value={name} onChange={(event) =>{
+          setName(event.target.value)
+        }} />
+
         <label htmlFor="username">e-mail:</label>
         <input id="username" type="text" value={email} onChange={(event) =>{
           setEmail(event.target.value)
@@ -35,28 +42,24 @@ export default function Login(props) {
         <button onClick={async (event) => {
           event.preventDefault();
           const data = {
+            name,
             email,
             password,
-          }
-          const res = await fetch(apiBaseUrl + 'auth/signin', {
+          };
+          const res = await fetch(apiBaseUrl + 'auth/signup', {
             method: 'POST',
             body: JSON.stringify(data),
             headers: {
               'Accept': 'application/json',
               'Content-Type': 'application/json'
             }
-          })
+          });
           if (res.ok) {
-            const json = await res.json();
-            setToken(json.user.token);
-            localStorage.setItem('token', json.user.token);
-            navigateTo('/');
+            alert("Usuário Criado com Sucesso!\nPor favor realize o Login")
+            navigateTo(-1);
           }
-        }}>Entrar</button>
+        }}>Cadastrar</button>
       </form>
-
-      <div>Não possui cadastro?</div>
-      <Link to="/Cadastrar">Cadastrar</Link>
     </div>
   );
 }
