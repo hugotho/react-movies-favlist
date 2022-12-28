@@ -31,7 +31,7 @@ export default function NavMenu(props) {
       }
     }
     fetchMe();
-  }, [token])
+  }, [token, apiBaseUrl])
 
   if (pathname !== "/Entrar" && pathname !== "/Cadastrar") {
     return (
