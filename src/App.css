@@ -5,3 +5,27 @@ nav > * {
 label, input {
   display: flex;
 }
+
+.radio {
+  display: inline;
+}
+
+.radio > input {
+  display: inline;
+}
+
+.radio + button {
+  display: flex;
+}
+
+.search > label > input[type="text"] {
+  display: inline;
+  width: 250px;
+  margin-left: 4px;
+}
+
+.search > label > input[type="number"] {
+  display: inline;
+  width: 45px;
+  margin-left: 4px;
+}
