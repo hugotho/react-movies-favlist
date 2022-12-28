@@ -4,6 +4,7 @@ export default function Movies() {
   const [title, setTitle] = useState('');
   const [year, setYear] = useState('');
   const [type, setType] = useState('')
+  const [showErrorText, setShowErrorText] = useState(false);
 
   return (
     <div>
@@ -12,11 +13,19 @@ export default function Movies() {
       <form className="search">
         <label>
           Título:
-          <input type="text" value={title} placeholder="Digite um título completo ou parcial"
+          <input type="text" value={title} required placeholder="Digite um título completo ou parcial"
             onInvalid={() => this.setCustomValidity('Enter User Name Here')} onChange={(event) => {
+              if (showErrorText && event.target.value.length) {
+                setShowErrorText(false);
+              }
               setTitle(event.target.value);
             }} />
         </label>
+        {showErrorText && (
+          <div role="alert" style={{ fontSize:"0.8em", color: "rgb(255, 0, 0)" }}>
+            Insira um título
+          </div>
+        )}
         <label>
           Ano:
           <input type="number" value={year} placeholder="Ex.: 2000"
@@ -50,6 +59,9 @@ export default function Movies() {
         </label>
         <button type="submit" onClick={(event) => {
           event.preventDefault();
+          if (title === "") {
+            setShowErrorText(true);
+          }
           console.log('title', title);
           console.log('year', year);
           console.log('type', type);
