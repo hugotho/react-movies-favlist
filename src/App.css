@@ -2,8 +2,16 @@ nav > * {
   margin: 0 4px;
 }
 
-#movies-list > span {
+.page-selector > span {
   margin: 0 4px;
+}
+
+.movies-list {
+  margin-top: 16px;
+}
+
+.movie {
+  margin: 8px 0;
 }
 
 label, input {
