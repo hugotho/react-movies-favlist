@@ -14,7 +14,8 @@ function App() {
   const initialToken = localStorage.getItem('token');
   const [token, setToken] = useState(initialToken);
 
-  const userApiUrl = `https://tstapi.ffcloud.com.br/`
+  const userApiUrl = `https://tstapi.ffcloud.com.br/`;
+  const omdbApiUrl = `http://www.omdbapi.com/?`;
 
   return (
     <AuthContext.Provider value={[token, setToken]}>
@@ -23,7 +24,7 @@ function App() {
         <NavMenu  api={userApiUrl}/>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/Buscar" element={<Movies />} />
+          <Route path="/Buscar" element={<Movies userApi={userApiUrl} omdbApi={omdbApiUrl}/>} />
           <Route path="/Sobre" element={<About />} />
           <Route path="/Entrar" element={<Login api={userApiUrl}/>} />
           <Route path="/Cadastrar" element={<Register api={userApiUrl}/>} />
