@@ -129,11 +129,11 @@ export default function Movies(props) {
       {movies.length !== 0 && (
         <div className="movies-list">
           <div className="page-selector">
-            <button disabled={downPageDisable && isWaiting} onClick={() => {
+            <button disabled={downPageDisable || isWaiting} onClick={() => {
               setPage(page - 1);
             }}>&laquo;</button>
             <span>Página {page} de {Math.ceil(moviesCount / 10)}</span>
-            <button disabled={upPageDisable && isWaiting} onClick={() => {
+            <button disabled={upPageDisable || isWaiting} onClick={() => {
               setPage(page + 1);
             }}>&raquo;</button>
             <span>(Mostrando {(page - 1) * 10 + 1}&#8211;{Math.min(page * 10, moviesCount)} de {moviesCount} resultados)</span>
