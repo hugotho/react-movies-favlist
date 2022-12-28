@@ -3,7 +3,7 @@ import { useState } from "react";
 export default function Movies() {
   const [title, setTitle] = useState('');
   const [year, setYear] = useState('');
-  const [type, setType] = useState('movie')
+  const [type, setType] = useState('')
 
   return (
     <div>
@@ -12,16 +12,23 @@ export default function Movies() {
       <form className="search">
         <label>
           Título:
-          <input placeholder="Digite um título completo ou parcial" type="text" value={title} onChange={(event) => {
-            setTitle(event.target.value);
-          }} />
+          <input type="text" value={title} placeholder="Digite um título completo ou parcial"
+            onInvalid={() => this.setCustomValidity('Enter User Name Here')} onChange={(event) => {
+              setTitle(event.target.value);
+            }} />
         </label>
         <label>
           Ano:
-          <input type="number" value={year} onChange={(event) => {
-            event.preventDefault();
-            setYear(event.target.value);
-          }} />
+          <input type="number" value={year} placeholder="Ex.: 2000"
+            onChange={(event) => {
+              setYear(event.target.value);
+            }} />
+        </label>
+        <label className="radio">
+          <input type="radio" value=""
+            checked={type === ""}
+            onChange={(event) => { setType(event.target.value) }} />
+          Tudo
         </label>
         <label className="radio">
           <input type="radio" value="movie"
@@ -41,7 +48,7 @@ export default function Movies() {
             onChange={(event) => { setType(event.target.value) }} />
           Episódios
         </label>
-        <button onClick={(event) => {
+        <button type="submit" onClick={(event) => {
           event.preventDefault();
           console.log('title', title);
           console.log('year', year);

@@ -26,6 +26,6 @@ label, input {
 
 .search > label > input[type="number"] {
   display: inline;
-  width: 45px;
+  width: 80px;
   margin-left: 4px;
 }
