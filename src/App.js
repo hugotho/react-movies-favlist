@@ -20,7 +20,7 @@ function App() {
     <AuthContext.Provider value={[token, setToken]}>
       <BrowserRouter>
         <h1>Lista de Filmes Favoritos</h1>
-        <NavMenu />
+        <NavMenu  api={userApiUrl}/>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/Buscar" element={<Movies />} />

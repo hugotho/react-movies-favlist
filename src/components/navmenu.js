@@ -2,15 +2,36 @@ import { useContext, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
 
-export default function NavMenu() {
+export default function NavMenu(props) {
   const [token, setToken] = useContext(AuthContext);
-  const [pathname, setPathname] = useState(window.location.pathname)
+  const [pathname, setPathname] = useState(window.location.pathname);
+  const [me, setMe] = useState(null);
   const location = useLocation();
-  const navigateTo = useNavigate()
+  const navigateTo = useNavigate();
+
+  const apiBaseUrl = props.api;
 
   useEffect(() => {
-    setPathname(location.pathname)
+    setPathname(location.pathname);
   }, [location]);
+
+  useEffect(() => {
+    async function fetchMe() {
+      if (token !== '') {
+        const res = await fetch(apiBaseUrl + 'auth/me', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        if (res.ok) {
+          const json = await res.json();
+          setMe(json);
+        }
+      }
+    }
+    fetchMe();
+  }, [token])
 
   if (pathname !== "/Entrar" && pathname !== "/Cadastrar") {
     return (
@@ -28,7 +49,7 @@ export default function NavMenu() {
         )}
         {token !== '' && (
           <>
-            <span></span>
+            {me && (<span>Olá {me.name.split(' ')[0]}!</span>)}
             <button onClick={(event) => {
               event.preventDefault();
               localStorage.setItem('token', '');
@@ -38,11 +59,11 @@ export default function NavMenu() {
         )}
       </nav>
     );
-  } else {
-    return (
-      <nav>
-        <Link onClick={() => { navigateTo(-1) }}>&laquo; Voltar</Link>
-      </nav>
-    );
   }
+
+  return (
+    <nav>
+      <Link onClick={() => { navigateTo(-1) }}>&laquo; Voltar</Link>
+    </nav>
+  );
 }
