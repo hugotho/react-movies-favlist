@@ -41,7 +41,6 @@ export default function Movies(props) {
       const res = await fetch(omdbApiBaseUrl + new URLSearchParams(params));
       if (res.ok) {
         const json = await res.json();
-        console.log(json);
         if (json.Response === "True") {
           setNotFound(false);
           setMovies(json.Search);
