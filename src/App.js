@@ -9,6 +9,7 @@ import Movies from './pages/movies';
 import Login from './pages/login';
 import NavMenu from './components/navmenu';
 import Register from './pages/register';
+import Details from './pages/details';
 
 function App() {
   const initialToken = localStorage.getItem('token');
@@ -28,6 +29,7 @@ function App() {
           <Route path="/Sobre" element={<About />} />
           <Route path="/Entrar" element={<Login api={userApiUrl}/>} />
           <Route path="/Cadastrar" element={<Register api={userApiUrl}/>} />
+          <Route path="/Detalhes/:id" element={<Details userApi={userApiUrl} omdbApi={omdbApiUrl}/>}/>
         </Routes>
       </BrowserRouter>
     </AuthContext.Provider>

@@ -43,8 +43,15 @@ nav > * {
 }
 
 .movie-data {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   margin: 0 8px;
   width: 314px;
+}
+
+.movie-more-details {
+  align-self: flex-end;
 }
 
 label, input {
