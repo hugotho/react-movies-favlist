@@ -17,6 +17,7 @@ export default function Movies(props) {
   const [showErrorText, setShowErrorText] = useState(false);
 
   const omdbApiBaseUrl = props.omdbApi;
+  const userApiBaseUrl = props.userApi;
 
   useEffect(() => {
     if (title !== "") {
@@ -144,7 +145,7 @@ export default function Movies(props) {
           </div>
           <div className="movies-list">
             {movies && movies.map(movie =>
-              <MovieCard key={movie.imdbID} movie={movie} />
+              <MovieCard key={movie.imdbID} movie={movie} userApi={userApiBaseUrl} />
             )}
           </div>
         </div>

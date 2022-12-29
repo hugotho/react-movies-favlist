@@ -1,9 +1,16 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
-import MovieSvg from '../emptyposter.svg';
+import AuthContext from '../context/AuthContext';
+import FavoritesContext from '../context/FavoritesContext';
+import MovieSvg from '../img/emptyposter.svg';
 
 export default function MovieCard(props) {
-  const movie = props.movie
+  const [token] = useContext(AuthContext);
+  const [favorites, setFavorites] = useContext(FavoritesContext);
+
+  const movie = props.movie;
+
+  const [isFavorite, setIsFavorite] = useState(favorites.includes(movie.imdbID))
 
   return (
     <div className="movie flex-container">
@@ -17,7 +24,30 @@ export default function MovieCard(props) {
       </div>
       <div className="movie-data">
         <div>
-          <div><em>{movie.Type === "movie" ? "Filme" : movie.Type === "series" ? "Série" : "Episódio"}</em></div>
+          <div className='movie-header'>
+            <em>{movie.Type === "movie" ? "Filme" : movie.Type === "series" ? "Série" : "Episódio"}</em>
+            
+            {isFavorite && (
+              <a className='fav-star is-favorite' onClick={() => {
+                const favoritesLocal = favorites;
+                const targetIndex = favoritesLocal.indexOf(movie.imdbID);
+                favoritesLocal.splice(targetIndex, 1);
+
+                setFavorites(favoritesLocal);
+                setIsFavorite(false);
+              }}>&#9733;</a>
+            )}
+            {!isFavorite && (
+              <a className='fav-star' onClick={() => {
+                const favoritesLocal = favorites;
+                favoritesLocal.push(movie.imdbID);
+
+                setFavorites(favoritesLocal);
+                setIsFavorite(true);
+              }}>&#9734;</a>
+            )}
+          
+          </div>
           <div className="flex-container">
             <strong style={{ "paddingRight": "4px" }}><em>Título:</em></strong>
             <span>{movie.Title}</span>
