@@ -1,3 +1,8 @@
+body {
+  width: 960px;
+  margin: 0 auto;
+}
+
 nav > * {
   margin: 0 4px;
 }
@@ -6,19 +11,43 @@ nav > * {
   margin: 0 4px;
 }
 
-.movies-list {
+.movies {
   margin-top: 16px;
 }
 
 .movie {
-  margin: 8px 0;
+  margin: 4px 0;
+  padding: 8px 4px;
+  background-color: rgb(243, 243, 243);
 }
 
-.movie > img {
+.movies-list {
+  width: 960px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.poster-container {
+  display: flex;
+  justify-content: center;
+  width: 132px;
+}
+
+.poster {
   height: 160px;
 }
 
+.movie-data {
+  margin: 0 8px;
+  width: 314px;
+}
+
 label, input {
+  display: flex;
+}
+
+.flex-container {
   display: flex;
 }
 

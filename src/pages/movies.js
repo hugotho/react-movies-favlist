@@ -126,7 +126,7 @@ export default function Movies(props) {
         </div>
       )}
       {movies.length !== 0 && (
-        <div className="movies-list">
+        <div className="movies">
           <div className="page-selector">
             <button disabled={downPageDisable || isWaiting} onClick={() => {
               setPage(page - 1);
@@ -137,7 +137,7 @@ export default function Movies(props) {
             }}>&raquo;</button>
             <span>(Mostrando {(page - 1) * 10 + 1}&#8211;{Math.min(page * 10, moviesCount)} de {moviesCount} resultados)</span>
           </div>
-          <div className="movies">
+          <div className="movies-list">
             {movies.map(movie =>
               <MovieCard movie={movie} />
             )}
