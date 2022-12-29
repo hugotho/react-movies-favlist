@@ -5,7 +5,7 @@ export default function Movies(props) {
   const [title, setTitle] = useState('');
   const [year, setYear] = useState('');
   const [type, setType] = useState('');
-  const [page, setPage] = useState(1);
+  const [displayPage, setDisplayPage] = useState(1);
   const [isWaiting, setIsWaiting] = useState(false);
   const [downPageDisable, setDownPageDisable] = useState(true);
   const [upPageDisable, setUpPageDisable] = useState(false);
@@ -24,30 +24,29 @@ export default function Movies(props) {
         year === "" ? null : { y: year },
         type === "" ? null : { type },
         { apikey: process.env.REACT_APP_OMDB_API_KEY },
-        { page: 1 },
       ));
     }
   }, [title, year, type]);
 
   useEffect(() => {
-    setDownPageDisable(page === 1);
-    setUpPageDisable(page >= Math.ceil(moviesCount / 10));
-  }, [page, moviesCount]);
+    setDownPageDisable(displayPage === 1);
+    setUpPageDisable(displayPage >= Math.ceil(moviesCount / 10));
+  }, [displayPage, moviesCount]);
 
-  async function getMovies(params) {
+  async function getMoviesList(params, page) {
     try {
       setIsWaiting(true);
-
-      const res = await fetch(omdbApiBaseUrl + new URLSearchParams(params));
+      const paramsWithPage = Object.assign(params, { page: page });
+      console.debug(paramsWithPage);
+      const res = await fetch(omdbApiBaseUrl + new URLSearchParams(paramsWithPage));
       if (res.ok) {
         const json = await res.json();
+
         if (json.Response === "True") {
           setNotFound(false);
           setMovies(json.Search);
-          setPage(1);
           setMoviesCount(json.totalResults);
         } else {
-          setMovies([]);
           setNotFound(true);
         }
       }
@@ -115,7 +114,8 @@ export default function Movies(props) {
           if (title === "") {
             setShowErrorText(true);
           } else {
-            getMovies(searchParams);
+            setDisplayPage(1);
+            getMoviesList(searchParams, 1);
             setLastSearchParams(searchParams);
           }
         }}>buscar</button>
@@ -128,18 +128,22 @@ export default function Movies(props) {
       {movies.length !== 0 && (
         <div className="movies">
           <div className="page-selector">
-            <button disabled={downPageDisable || isWaiting} onClick={() => {
-              setPage(page - 1);
+            <button disabled={downPageDisable || isWaiting} onClick={async () => {
+              let page = displayPage - 1
+              setDisplayPage(page);
+              getMoviesList(lastSearchParams, page);
             }}>&laquo;</button>
-            <span>Página {page} de {Math.ceil(moviesCount / 10)}</span>
-            <button disabled={upPageDisable || isWaiting} onClick={() => {
-              setPage(page + 1);
+            <span>Página {displayPage} de {Math.ceil(moviesCount / 10)}</span>
+            <button disabled={upPageDisable || isWaiting} onClick={async () => {
+              let page = displayPage + 1;
+              setDisplayPage(page);
+              getMoviesList(lastSearchParams, page);
             }}>&raquo;</button>
-            <span>(Mostrando {(page - 1) * 10 + 1}&#8211;{Math.min(page * 10, moviesCount)} de {moviesCount} resultados)</span>
+            <span>(Mostrando {(displayPage - 1) * 10 + 1}&#8211;{Math.min(displayPage * 10, moviesCount)} de {moviesCount} resultados)</span>
           </div>
           <div className="movies-list">
-            {movies.map(movie =>
-              <MovieCard movie={movie} />
+            {movies && movies.map(movie =>
+              <MovieCard key={movie.imdbID} movie={movie} />
             )}
           </div>
         </div>
