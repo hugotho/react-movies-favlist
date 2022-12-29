@@ -18,7 +18,7 @@ nav > * {
 .movie {
   margin: 4px 0;
   padding: 8px 4px;
-  background-color: rgb(243, 243, 243);
+  background-color: #f0f0f0;
 }
 
 .movies-list {
@@ -32,10 +32,14 @@ nav > * {
   display: flex;
   justify-content: center;
   width: 132px;
+  height: 160px;
+  background-color: #dddddd;
 }
 
 .poster {
-  height: 160px;
+  align-self: center;
+  max-height: 160px;
+  max-width: 132px;
 }
 
 .movie-data {
