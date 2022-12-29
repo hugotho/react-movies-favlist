@@ -47,6 +47,7 @@ export default function Movies(props) {
           setMovies(json.Search);
           setMoviesCount(json.totalResults);
         } else {
+          setMovies([]);
           setNotFound(true);
         }
       }
