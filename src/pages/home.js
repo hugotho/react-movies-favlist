@@ -15,6 +15,11 @@ export default function Home() {
           {favorites.length > 0 && (favorites.map(fav =>
             <div key={fav}>{fav}</div>
           ))}
+          {favorites.length === 0 && (
+            <p>
+              Você ainda não favoritou nenhum título, que tal <Link to="/Buscar">buscar um filme</Link> de seu interesse?
+            </p>
+          )}
         </>
       )}
       {token === '' && (
