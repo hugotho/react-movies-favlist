@@ -177,6 +177,12 @@ export default function Details(props) {
     }
   }
 
+  async function alterReview() {
+    await removeReview();
+    await addReview();
+    setIsEditing(false);
+  }
+
   useEffect(() => {
     getMovieReviews();
   }, [myReview]);
@@ -275,7 +281,7 @@ export default function Details(props) {
                     <textarea placeholder="Escreva seu comentário aqui" value={reviewInput} onChange={(event) => {
                       setReviewInput(event.target.value);
                     }} />
-                    <button onClick={(event) => {
+                    <button type="submit" onClick={(event) => {
                       event.preventDefault();
                       addReview();
                     }}>Inserir</button>
@@ -287,11 +293,35 @@ export default function Details(props) {
                   {!isEditing && (
                     <>
                       <div>{myReview.comment}</div>
-                      <button className="reset-button buttonToLink">Editar</button>
                       <button className="reset-button buttonToLink" onClick={(event) => {
+                        event.preventDefault();
+                        setReviewInput(myReview.comment);
+                        setIsEditing(true);
+                      }}>Editar</button>
+                      <button className="reset-button buttonToLink" onClick={(event) => {
+                        event.preventDefault();
                         event.preventDefault();
                         removeReview();
                       }}>Apagar</button>
+                    </>
+                  )}
+                  {isEditing && (
+                    <>
+                      <form id="review-form">
+                        <textarea placeholder="Escreva seu comentário aqui" value={reviewInput} onChange={(event) => {
+                          setReviewInput(event.target.value);
+                        }} />
+                        <div className="flex-container">
+                          <button type="Cancelar" onClick={(event) => {
+                            event.preventDefault();
+                            setIsEditing(false);
+                          }}>Cancelar</button>
+                          <button type="submit" onClick={(event) => {
+                            event.preventDefault();
+                            alterReview();
+                          }}>Inserir alterações</button>
+                        </div>
+                      </form>
                     </>
                   )}
                 </>
