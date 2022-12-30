@@ -16,6 +16,8 @@ export default function MovieCard(props) {
   const movie = props.movie;
   const userApiUrl = props.userApi;
 
+  const updateParent = props.updateParent;
+
   let apiBlocking = false;
 
   async function addUserFavorite() {
@@ -65,6 +67,9 @@ export default function MovieCard(props) {
 
           setFavorites(favoritesLocal);
           setIsFavorite(false);
+          if (updateParent !== undefined) {
+            updateParent();
+          }
         }
       } catch (err) {
         console.error(err);

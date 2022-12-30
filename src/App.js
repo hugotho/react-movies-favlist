@@ -34,7 +34,6 @@ function App() {
     }
   }
 
-
   useEffect(() => {
     if (token !== '') {
       getFavorites()
@@ -48,7 +47,7 @@ function App() {
           <h1>Lista de Filmes OMDB</h1>
           <NavMenu api={userApiUrl} />
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Home userApi={userApiUrl} omdbApi={omdbApiUrl}/>} />
             <Route path="/Buscar" element={<Movies userApi={userApiUrl} omdbApi={omdbApiUrl} />} />
             <Route path="/Sobre" element={<About />} />
             <Route path="/Entrar" element={<Login api={userApiUrl} />} />
