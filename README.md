@@ -18,7 +18,7 @@ para a disciplina, podendo não estar mais disponível.
 
 ## Como executar
 
-Subistitua o valor no de `my-omdb-api-key` no arquivo `.env` (preferencialmente duplique em um `.env.local`)
+Subistitua o valor no de `my-omdb-api-key` com uma chave válida do OMDB no arquivo `.env` (preferencialmente duplique em um `.env.local`)
 
 Execute no terminal
 ```sh
