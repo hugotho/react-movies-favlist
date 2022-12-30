@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
+import FavoritesContext from "../context/FavoritesContext";
 import MovieSvg from '../img/emptyposter.svg';
 
 function capitalize(string) {
@@ -8,13 +9,22 @@ function capitalize(string) {
 }
 
 export default function Details(props) {
-  const [token] = useContext(AuthContext);
-  const [movie, setMovie] = useState(null);
-  const [reviews, setReviews] = useState([]);
-
   const movieId = useParams().id;
+
+  const [token] = useContext(AuthContext);
+  const [favorites, setFavorites] = useContext(FavoritesContext);
+  const [movie, setMovie] = useState(null);
+  const [isFavorite, setIsFavorite] = useState(favorites.includes(movieId))
+  const [reviews, setReviews] = useState([]);
+  const [myself, setMyself] = useState(null);
+  const [myReview, setMyreview] = useState(undefined);
+  const [reviewInput, setReviewInput] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+
   const omdbApiBaseUrl = props.omdbApi;
   const userApiBaseUrl = props.userApi;
+
+  let apiBlocking = false;
 
   async function getMovieData() {
     try {
@@ -46,21 +56,121 @@ export default function Details(props) {
     })
     if (res.ok) {
       const json = await res.json();
-      console.debug(json.reviews);
-      setReviews(json.reviews);
+
+      const allReviews = json.reviews
+      const myReviewLocal = allReviews.find((review) => {
+        return review.user.name === myself.name
+      })
+      const otherPeopleReviews = allReviews.filter((review) => {
+        return review.user.name !== myself.name
+      })
+      setMyreview(myReviewLocal);
+      setReviews(otherPeopleReviews);
+    }
+  }
+
+  async function getMyself() {
+    if (token !== '') {
+      const res = await fetch(userApiBaseUrl + 'auth/me', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      if (res.ok) {
+        const json = await res.json();
+        setMyself(json);
+      }
+    }
+  };
+
+  async function addUserFavorite() {
+    if (!apiBlocking) {
+      try {
+        apiBlocking = true;
+        const data = {
+          imdbID: movie.imdbID,
+        }
+        const res = await fetch(userApiBaseUrl + 'favorites', {
+          method: 'POST',
+          body: JSON.stringify(data),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token,
+          }
+        })
+        if (res.ok) {
+          const favoritesLocal = favorites;
+          favoritesLocal.push(movie.imdbID);
+
+          setFavorites(favoritesLocal);
+          setIsFavorite(true);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        apiBlocking = false;
+      }
+    }
+  }
+
+  async function removeUserFavorite() {
+    if (!apiBlocking) {
+      try {
+        const res = await fetch(userApiBaseUrl + 'favorites/' + movie.imdbID, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token,
+          }
+        })
+        if (res.ok) {
+          const favoritesLocal = favorites;
+          const targetIndex = favoritesLocal.indexOf(movie.imdbID);
+          favoritesLocal.splice(targetIndex, 1);
+
+          setFavorites(favoritesLocal);
+          setIsFavorite(false);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        apiBlocking = false;
+      }
     }
   }
 
   useEffect(() => {
     getMovieData();
+    if (token) {
+      getMyself();
+    } 
     getMovieReviews();
-  }, [])
+    
+  }, [token]);
 
   return (
     <div>
       {movie && (
         <>
-          <h2>{movie.Title}</h2>
+          {!token && (
+            <h2>{movie.Title}</h2>
+          )}
+          {token && (
+            <div className="flex-container">
+              <h2 style={{ "marginRight": "8px" }}>{movie.Title}</h2>
+              {isFavorite && (
+                <button className='fav-star is-favorite reset-button' onClick={() => {
+                  removeUserFavorite();
+                }}>&#9733;</button>
+              )}
+              {!isFavorite && (
+                <button className='fav-star reset-button' onClick={() => {
+                  addUserFavorite();
+                }}>&#9734;</button>
+              )}
+            </div>
+          )}
           <div className="flex-container">
             <div className="details-poster-container">
               {movie.Poster !== "N/A" && (
@@ -97,11 +207,49 @@ export default function Details(props) {
             </div>
           </div>
           <h3>Comentários:</h3>
-          {reviews && reviews.map(review =>
-            <div key={review.user.name} style={{"margin": "8px 0"}}>
-              <strong>{review.user.name}:</strong>
+          {!token && reviews && reviews.map(review =>
+            <div key={review.user.name} style={{ "margin": "8px 0" }}>
+              <strong><em>{review.user.name}:</em></strong>
               <div>{review.comment}</div>
             </div>
+          )}
+          {token && (
+            <>
+              <h4 style={{ "color": "black" }}>Meu cometário:</h4>
+              {!myReview && (
+                <>
+                  <form id="review-form">
+                    <textarea placeholder="Escreva seu comentário aqui" value={reviewInput} onChange={(event) => {
+                      setReviewInput(event.target.value);
+                    }} />
+                    <button>Inserir</button>
+                  </form>
+                </>
+              )}
+              {myReview && (
+                <>
+                  {!isEditing && (
+                    <>
+                      <div>{myReview.comment}</div>
+                      <button className="reset-button buttonToLink">Editar</button>
+                      <button className="reset-button buttonToLink">Apagar</button>
+                    </>
+                  )}
+                </>
+              )}
+              {reviews && (
+                <>
+                  <hr />
+                  <h4>Demais comentários:</h4>
+                  {reviews.map(review =>
+                    <div key={review.user.name} style={{ "margin": "8px 0" }}>
+                      <strong><em>{review.user.name}:</em></strong>
+                      <div>{review.comment}</div>
+                    </div>
+                  )}
+                </>
+              )}
+            </>
           )}
         </>
       )}

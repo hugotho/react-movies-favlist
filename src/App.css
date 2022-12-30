@@ -54,6 +54,13 @@ nav > * {
   padding: 0;
 }
 
+.buttonToLink{
+  font-size: 0.8em;
+  text-decoration: underline;
+  color: rgb(0, 0, 200);
+  margin-right: 8px;
+}
+
 .poster-container {
   display: flex;
   justify-content: center;
@@ -132,4 +139,20 @@ button[type="submit"] {
   display: inline;
   width: 80px;
   margin-left: 4px;
+}
+
+#review-form {
+  display: flex;
+  flex-direction: column;
+  align-items:flex-start;
+}
+
+h4 {
+  margin: 8px 0;
+  color: #797474
+}
+
+textarea {
+  height: 48px;
+  width: 400px;
 }
