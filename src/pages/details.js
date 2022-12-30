@@ -47,21 +47,6 @@ export default function Details(props) {
     }
   }
 
-  async function getMovieReviews() {
-    const res = await fetch(userApiBaseUrl + 'reviews/' + movieId, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Authorization': 'Bearer ' + token
-      }
-    })
-    if (res.ok) {
-      const json = await res.json();
-
-      setReviews(json.reviews);
-    }
-  }
-
   async function getMyself() {
     if (token !== '') {
       const res = await fetch(userApiBaseUrl + 'auth/me', {
@@ -130,6 +115,46 @@ export default function Details(props) {
       } finally {
         apiBlocking = false;
       }
+    }
+  }
+
+  async function getMovieReviews() {
+    const res = await fetch(userApiBaseUrl + 'reviews/' + movieId, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ' + token
+      }
+    })
+    if (res.ok) {
+      const json = await res.json();
+
+      setReviews(json.reviews);
+    }
+  }
+
+  async function addReview() {
+    try {
+      apiBlocking = true;
+      const data = {
+        comment: reviewInput,
+        stars: 5
+      }
+      const res = await fetch(userApiBaseUrl + 'reviews/' + movieId, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token,
+        }
+      })
+      if (res.ok) {
+        setMyreview(data);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      apiBlocking = false;
     }
   }
 
@@ -220,14 +245,17 @@ export default function Details(props) {
           )}
           {token && (
             <>
-              <h4 style={{ "color": "black" }}>Meu cometário:</h4>
+              <h4 style={{ "color": "black" }}>Seu cometário:</h4>
               {!myReview && (
                 <>
                   <form id="review-form">
                     <textarea placeholder="Escreva seu comentário aqui" value={reviewInput} onChange={(event) => {
                       setReviewInput(event.target.value);
                     }} />
-                    <button>Inserir</button>
+                    <button onClick={(event) => {
+                      event.preventDefault();
+                      addReview();
+                    }}>Inserir</button>
                   </form>
                 </>
               )}
