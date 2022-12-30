@@ -6,9 +6,6 @@ function isEmpty(obj) {
 }
 
 export default function Movies(props) {
-  const [title, setTitle] = useState('');
-  const [year, setYear] = useState('');
-  const [type, setType] = useState('');
   const [isWaiting, setIsWaiting] = useState(false);
   const [downPageDisable, setDownPageDisable] = useState(true);
   const [upPageDisable, setUpPageDisable] = useState(false);
@@ -16,6 +13,9 @@ export default function Movies(props) {
   const [searchParams, setSearchParams] = useState({});
   const [displayPage, setDisplayPage] = props.memPage;
   const [lastSearchParams, setLastSearchParams] = props.memSearch;
+  const [title, setTitle] = useState('');
+  const [year, setYear] = useState('');
+  const [type, setType] = useState('');
   const [movies, setMovies] = useState([]);
   const [moviesCount, setMoviesCount] = useState(0);
   const [showErrorText, setShowErrorText] = useState(false);
@@ -40,6 +40,9 @@ export default function Movies(props) {
 
   useEffect(() => {
     if (!isEmpty(lastSearchParams)) {
+      setTitle(lastSearchParams.s);
+      setYear(lastSearchParams.hasOwnProperty('year')? lastSearchParams.year : '')
+      setType(lastSearchParams.hasOwnProperty('type')? lastSearchParams.type : '')
       let page = displayPage
       getMoviesList(lastSearchParams, page);
     }
