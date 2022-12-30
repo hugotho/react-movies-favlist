@@ -51,6 +51,9 @@ export default function Login(props) {
             setToken(json.user.token);
             localStorage.setItem('token', json.user.token);
             navigateTo('/');
+          } else {
+            const json = await res.json();
+            alert(json.msg);
           }
         }}>Entrar</button>
       </form>

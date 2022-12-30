@@ -57,6 +57,9 @@ export default function Register(props) {
           if (res.ok) {
             alert("Usuário Criado com Sucesso!\nPor favor realize o Login")
             navigateTo(-1);
+          } else {
+            const json = await res.json();
+            alert(json.msg);
           }
         }}>Cadastrar</button>
       </form>
