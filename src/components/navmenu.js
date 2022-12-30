@@ -5,13 +5,17 @@ import FavoritesContext from "../context/FavoritesContext";
 
 export default function NavMenu(props) {
   const [token, setToken] = useContext(AuthContext);
-  const [_, setFavorites] = useContext(FavoritesContext);
+  const [favorites, setFavorites] = useContext(FavoritesContext);
   const [pathname, setPathname] = useState(window.location.pathname);
   const [me, setMe] = useState(null);
   const location = useLocation();
   const navigateTo = useNavigate();
 
   const apiBaseUrl = props.api;
+
+  if (false) {
+    console.log(favorites);
+  }
 
   useEffect(() => {
     setPathname(location.pathname);
