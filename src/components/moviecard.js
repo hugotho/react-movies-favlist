@@ -84,18 +84,18 @@ export default function MovieCard(props) {
         <div>
           <div className='movie-header'>
             <em>{movie.Type === "movie" ? "Filme" : movie.Type === "series" ? "Série" : "Episódio"}</em>
-
-            {isFavorite && (
-              <a className='fav-star is-favorite' onClick={() => {
-                removeUserFavorite();
-              }}>&#9733;</a>
-            )}
-            {!isFavorite && (
-              <a className='fav-star' onClick={() => {
-                addUserFavorite();
-              }}>&#9734;</a>
-            )}
-
+            {token !== "" && (<>
+              {isFavorite && (
+                <a className='fav-star is-favorite' onClick={() => {
+                  removeUserFavorite();
+                }}>&#9733;</a>
+              )}
+              {!isFavorite && (
+                <a className='fav-star' onClick={() => {
+                  addUserFavorite();
+                }}>&#9734;</a>
+              )}
+            </>)}
           </div>
           <div className="flex-container">
             <strong style={{ "paddingRight": "4px" }}><em>Título:</em></strong>

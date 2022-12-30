@@ -1,9 +1,11 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
+import FavoritesContext from "../context/FavoritesContext";
 
 export default function NavMenu(props) {
   const [token, setToken] = useContext(AuthContext);
+  const [_, setFavorites] = useContext(FavoritesContext);
   const [pathname, setPathname] = useState(window.location.pathname);
   const [me, setMe] = useState(null);
   const location = useLocation();
@@ -53,6 +55,7 @@ export default function NavMenu(props) {
             <button onClick={(event) => {
               event.preventDefault();
               localStorage.setItem('token', '');
+              setFavorites([]);
               setToken('');
             }}> Sair </button>
           </>

@@ -13,7 +13,7 @@ export default function Home() {
       {token !== '' && (
         <>
           {favorites.length > 0 && (favorites.map(fav =>
-            <div>{fav}</div>
+            <div key={fav}>{fav}</div>
           ))}
         </>
       )}
