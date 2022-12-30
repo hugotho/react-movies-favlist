@@ -17,7 +17,7 @@ export default function Details(props) {
   const [isFavorite, setIsFavorite] = useState(favorites.includes(movieId))
   const [reviews, setReviews] = useState([]);
   const [myself, setMyself] = useState(null);
-  const [myReview, setMyreview] = useState(undefined);
+  const [myReview, setMyReview] = useState(null);
   const [otherReviews, setOtherReviews] = useState([]);
   const [reviewInput, setReviewInput] = useState("");
   const [isEditing, setIsEditing] = useState(false);
@@ -98,7 +98,6 @@ export default function Details(props) {
         const res = await fetch(userApiBaseUrl + 'favorites/' + movie.imdbID, {
           method: 'DELETE',
           headers: {
-            'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + token,
           }
         })
@@ -149,7 +148,7 @@ export default function Details(props) {
         }
       })
       if (res.ok) {
-        setMyreview(data);
+        setMyReview(data);
       }
     } catch (err) {
       console.error(err);
@@ -158,13 +157,37 @@ export default function Details(props) {
     }
   }
 
+  async function removeReview() {
+    if (!apiBlocking) {
+      try {
+        const res = await fetch(userApiBaseUrl + 'reviews/' + movie.imdbID, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': 'Bearer ' + token,
+          }
+        })
+        if (res.ok) {
+          setMyReview(null);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        apiBlocking = false;
+      }
+    }
+  }
+
+  useEffect(() => {
+    getMovieReviews();
+  }, [myReview]);
+
   useEffect(() => {
     if (token) {
       getMyself();
     }
     getMovieReviews();
     getMovieData();
-    
+
   }, []);
 
   useEffect(() => {
@@ -175,7 +198,7 @@ export default function Details(props) {
     const otherPeopleReviews = allReviews.filter((review) => {
       return review.user.name !== myself.name
     })
-    setMyreview(myReviewLocal);
+    setMyReview(myReviewLocal);
     setOtherReviews(otherPeopleReviews);
   }, [myself]);
 
@@ -265,7 +288,10 @@ export default function Details(props) {
                     <>
                       <div>{myReview.comment}</div>
                       <button className="reset-button buttonToLink">Editar</button>
-                      <button className="reset-button buttonToLink">Apagar</button>
+                      <button className="reset-button buttonToLink" onClick={(event) => {
+                        event.preventDefault();
+                        removeReview();
+                      }}>Apagar</button>
                     </>
                   )}
                 </>
