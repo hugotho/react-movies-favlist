@@ -18,6 +18,7 @@ export default function Details(props) {
   const [reviews, setReviews] = useState([]);
   const [myself, setMyself] = useState(null);
   const [myReview, setMyreview] = useState(undefined);
+  const [otherReviews, setOtherReviews] = useState([]);
   const [reviewInput, setReviewInput] = useState("");
   const [isEditing, setIsEditing] = useState(false);
 
@@ -57,15 +58,7 @@ export default function Details(props) {
     if (res.ok) {
       const json = await res.json();
 
-      const allReviews = json.reviews
-      const myReviewLocal = allReviews.find((review) => {
-        return review.user.name === myself.name
-      })
-      const otherPeopleReviews = allReviews.filter((review) => {
-        return review.user.name !== myself.name
-      })
-      setMyreview(myReviewLocal);
-      setReviews(otherPeopleReviews);
+      setReviews(json.reviews);
     }
   }
 
@@ -141,13 +134,25 @@ export default function Details(props) {
   }
 
   useEffect(() => {
-    getMovieData();
     if (token) {
       getMyself();
-    } 
+    }
     getMovieReviews();
+    getMovieData();
     
-  }, [token]);
+  }, []);
+
+  useEffect(() => {
+    const allReviews = reviews;
+    const myReviewLocal = allReviews.find((review) => {
+      return review.user.name === myself.name
+    })
+    const otherPeopleReviews = allReviews.filter((review) => {
+      return review.user.name !== myself.name
+    })
+    setMyreview(myReviewLocal);
+    setOtherReviews(otherPeopleReviews);
+  }, [myself]);
 
   return (
     <div>
@@ -237,11 +242,11 @@ export default function Details(props) {
                   )}
                 </>
               )}
-              {reviews && (
+              {otherReviews && (
                 <>
                   <hr />
                   <h4>Demais comentários:</h4>
-                  {reviews.map(review =>
+                  {otherReviews.map(review =>
                     <div key={review.user.name} style={{ "margin": "8px 0" }}>
                       <strong><em>{review.user.name}:</em></strong>
                       <div>{review.comment}</div>
