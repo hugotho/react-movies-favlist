@@ -4,6 +4,10 @@ import AuthContext from '../context/AuthContext';
 import FavoritesContext from '../context/FavoritesContext';
 import MovieSvg from '../img/emptyposter.svg';
 
+function capitalize(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 export default function MovieCard(props) {
   const [token] = useContext(AuthContext);
   const [favorites, setFavorites] = useContext(FavoritesContext);
@@ -83,17 +87,17 @@ export default function MovieCard(props) {
       <div className="movie-data">
         <div>
           <div className='movie-header'>
-            <em>{movie.Type === "movie" ? "Filme" : movie.Type === "series" ? "Série" : "Episódio"}</em>
+            <em>{movie.Type === "movie" ? "Filme" : movie.Type === "series" ? "Série" : movie.Type === "episode" ? "Episódio" : capitalize(movie.Type)}</em>
             {token !== "" && (<>
               {isFavorite && (
-                <a className='fav-star is-favorite' onClick={() => {
+                <button className='fav-star is-favorite reset-button' onClick={() => {
                   removeUserFavorite();
-                }}>&#9733;</a>
+                }}>&#9733;</button>
               )}
               {!isFavorite && (
-                <a className='fav-star' onClick={() => {
+                <button className='fav-star reset-button' onClick={() => {
                   addUserFavorite();
-                }}>&#9734;</a>
+                }}>&#9734;</button>
               )}
             </>)}
           </div>

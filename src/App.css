@@ -44,6 +44,16 @@ nav > * {
   color: #9360c4;
 }
 
+.reset-button {
+  background-color: transparent;
+  border-width: 0;
+  font-family: inherit;
+  font-style: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  padding: 0;
+}
+
 .poster-container {
   display: flex;
   justify-content: center;
