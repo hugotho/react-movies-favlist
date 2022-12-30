@@ -10,9 +10,11 @@ function capitalize(string) {
 export default function Details(props) {
   const [token] = useContext(AuthContext);
   const [movie, setMovie] = useState(null);
+  const [reviews, setReviews] = useState([]);
 
-  const movieId = useParams().id
-  const omdbApiBaseUrl = props.omdbApi
+  const movieId = useParams().id;
+  const omdbApiBaseUrl = props.omdbApi;
+  const userApiBaseUrl = props.userApi;
 
   async function getMovieData() {
     try {
@@ -34,8 +36,24 @@ export default function Details(props) {
     }
   }
 
+  async function getMovieReviews() {
+    const res = await fetch(userApiBaseUrl + 'reviews/' + movieId, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ' + token
+      }
+    })
+    if (res.ok) {
+      const json = await res.json();
+      console.debug(json.reviews);
+      setReviews(json.reviews);
+    }
+  }
+
   useEffect(() => {
     getMovieData();
+    getMovieReviews();
   }, [])
 
   return (
@@ -78,7 +96,13 @@ export default function Details(props) {
               )}
             </div>
           </div>
-          <h3>Reviews:</h3>
+          <h3>Comentários:</h3>
+          {reviews && reviews.map(review =>
+            <div key={review.user.name} style={{"margin": "8px 0"}}>
+              <strong>{review.user.name}:</strong>
+              <div>{review.comment}</div>
+            </div>
+          )}
         </>
       )}
     </div>
