@@ -38,7 +38,7 @@ export default function Home(props) {
 
   useEffect(() => {
     transformFavToMovies();
-  }, []);
+  }, [favorites]);
 
   return (
     <div>
