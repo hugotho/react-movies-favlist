@@ -1,17 +1,21 @@
 import { useEffect, useState } from "react";
 import MovieCard from "../components/moviecard";
 
+function isEmpty(obj) {
+  return Object.keys(obj).length === 0 && obj.constructor === Object;
+}
+
 export default function Movies(props) {
   const [title, setTitle] = useState('');
   const [year, setYear] = useState('');
   const [type, setType] = useState('');
-  const [displayPage, setDisplayPage] = useState(1);
   const [isWaiting, setIsWaiting] = useState(false);
   const [downPageDisable, setDownPageDisable] = useState(true);
   const [upPageDisable, setUpPageDisable] = useState(false);
   const [notFound, setNotFound] = useState(false);
   const [searchParams, setSearchParams] = useState({});
-  const [lastSearchParams, setLastSearchParams] = useState({});
+  const [displayPage, setDisplayPage] = props.memPage;
+  const [lastSearchParams, setLastSearchParams] = props.memSearch;
   const [movies, setMovies] = useState([]);
   const [moviesCount, setMoviesCount] = useState(0);
   const [showErrorText, setShowErrorText] = useState(false);
@@ -33,6 +37,13 @@ export default function Movies(props) {
     setDownPageDisable(displayPage === 1);
     setUpPageDisable(displayPage >= Math.ceil(moviesCount / 10));
   }, [displayPage, moviesCount]);
+
+  useEffect(() => {
+    if (!isEmpty(lastSearchParams)) {
+      let page = displayPage
+      getMoviesList(lastSearchParams, page);
+    }
+  }, [])
 
   async function getMoviesList(params, page) {
     try {

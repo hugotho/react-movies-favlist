@@ -15,7 +15,9 @@ import FavoritesContext from './context/FavoritesContext';
 function App() {
   const initialToken = localStorage.getItem('token');
   const [token, setToken] = useState(initialToken);
-  const [favorites, setFavorites] = useState([])
+  const [favorites, setFavorites] = useState([]);
+  const [memPage, setMemPage] = useState(1);
+  const [memSearchParams, setMemSearchParams] = useState({});
 
   const userApiUrl = `https://tstapi.ffcloud.com.br/`;
   const omdbApiUrl = `http://www.omdbapi.com/?`;
@@ -48,7 +50,11 @@ function App() {
           <NavMenu api={userApiUrl} />
           <Routes>
             <Route path="/" element={<Home userApi={userApiUrl} omdbApi={omdbApiUrl}/>} />
-            <Route path="/Buscar" element={<Movies userApi={userApiUrl} omdbApi={omdbApiUrl} />} />
+            <Route path="/Buscar" element={<Movies 
+              userApi={userApiUrl} omdbApi={omdbApiUrl}
+              memPage={[memPage, setMemPage]}
+              memSearch={[memSearchParams, setMemSearchParams]}
+            />} />
             <Route path="/Sobre" element={<About />} />
             <Route path="/Entrar" element={<Login api={userApiUrl} />} />
             <Route path="/Cadastrar" element={<Register api={userApiUrl} />} />
