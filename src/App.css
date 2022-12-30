@@ -80,6 +80,24 @@ nav > * {
   align-self: flex-end;
 }
 
+.details-poster-container {
+  display: flex;
+  justify-content: center;
+  width: 198px;
+  height: 240px;
+  background-color: #dddddd;
+}
+
+.details-poster {
+  align-self: center;
+  max-height: 240px;
+  max-width: 198px;
+}
+
+.details-movie-data {
+  margin: 0 16px;
+}
+
 label, input {
   display: flex;
 }
